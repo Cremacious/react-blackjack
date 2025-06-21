@@ -1,19 +1,10 @@
-import { Button } from './ui/button';
-import { useGameStore } from '@/stores/useGameStore';
+import HitButton from './HitButton';
 
 const PlayerControls = () => {
-  const { setGameState, resetGame } = useGameStore();
-  const handleNewGame = () => {
-    resetGame();
-    setGameState('in-progress');
-  };
-
   return (
     <div>
       Player controls
-      <Button onClick={handleNewGame}>New Game</Button>
-      <Button>Hit</Button>
-      <Button>Stay</Button>
+      <HitButton />
     </div>
   );
 };

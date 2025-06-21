@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import NewGameButton from '@/components/NewGameButton';
 import { Link } from 'react-router';
 
 const HomePage = () => {
@@ -6,7 +6,7 @@ const HomePage = () => {
     <div className="text-blue-500">
       Homepage
       <Link to="/game">
-        <Button>Play</Button>
+        <NewGameButton />
       </Link>
     </div>
   );
