@@ -1,16 +1,22 @@
 // import CardHand from '@/components/CardHand';
-import PlayerControls from '@/components/PlayerControls';
+import PlayerControls from '@/components/controls/PlayerControls';
 import ScoreBoard from '@/components/ScoreBoard';
 import { useGameStore } from '@/stores/useGameStore';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 
 const Game = () => {
-  const navigate = useNavigate();
   const { deckId, playerCards, dealerCards } = useGameStore();
 
   if (!deckId) {
-    navigate('/');
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-lg">
+            <Link to={'/'}>You have no running game. Start a new one</Link>{' '}
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -34,7 +40,7 @@ const Game = () => {
       )}
       <ScoreBoard />
       <p className="bg-blue-500 text-black">Deckid: {deckId}</p>
-      {/* <CardHand /> */}
+
       <PlayerControls />
       {playerCards.length > 0 ? (
         playerCards.map((card: any, index: number) => (

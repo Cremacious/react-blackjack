@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { useDrawCards } from '@/hooks/useGameActions';
 import { useGameStore } from '@/stores/useGameStore';
 
@@ -11,6 +11,8 @@ const HitButton = () => {
       drawCard({ deckId, count: 1, target: 'player' });
     }
   };
+
+  // TODO: Bug, game doesn't end when drawing 21.
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import { useDrawCards } from '@/hooks/useGameActions';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/stores/useGameStore';
 
 const StayButton = () => {

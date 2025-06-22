@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { useShuffleDeck, useDrawCards } from '@/hooks/useGameActions';
 import { useGameStore } from '@/stores/useGameStore';
 
