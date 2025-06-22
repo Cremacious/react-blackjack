@@ -5,7 +5,6 @@ import StayButton from './StayButton';
 const PlayerControls = () => {
   return (
     <div>
-      Player controls
       <HitButton />
       <RestartButton />
       <StayButton />

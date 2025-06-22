@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 interface Card {
   code: string;
@@ -54,54 +55,74 @@ const calcHandScore = (cards: Card[]): number => {
   return score;
 };
 
-export const useGameStore = create<GameState>((set) => ({
-  deckId: '',
-  gameState: 'waiting',
-  playerCards: [],
-  dealerCards: [],
-  playerScore: 0,
-  dealerScore: 0,
-  wins: 0,
-  losses: 0,
-  setGameState: (state) => set({ gameState: state }),
-  setDeckId: (deckId) => set({ deckId }),
-  setPlayerCards: (cards) =>
-    set((state) => ({ playerCards: [...state.playerCards, ...cards] })),
-  addPlayerCard: (card) =>
-    set((state) => {
-      const newPlayerCards = [...state.playerCards, card];
-      const newPlayerScore = calcHandScore(newPlayerCards);
-      const newGameState = newPlayerScore > 21 ? 'finished' : state.gameState;
-
-      return {
-        playerCards: newPlayerCards,
-        playerScore: newPlayerScore,
-        gameState: newGameState,
-      };
-    }),
-  setDealerCards: (cards) =>
-    set((state) => ({ dealerCards: [...state.dealerCards, ...cards] })),
-  addDealerCard: (card) =>
-    set((state) => {
-      const newDealerCards = [...state.dealerCards, card];
-      const newDealerScore = calcHandScore(newDealerCards);
-
-      return {
-        dealerCards: newDealerCards,
-        dealerScore: newDealerScore,
-      };
-    }),
-  incrementWins: () => set((state) => ({ wins: state.wins + 1 })),
-  incrementLosses: () => set((state) => ({ losses: state.losses + 1 })),
-  resetGame: () =>
-    set((state) => ({
-      deckId: state.deckId,
-      wins: state.wins,
-      losses: state.losses,
+export const useGameStore = create<GameState>()(
+  devtools(
+    (set) => ({
+      deckId: '',
       gameState: 'waiting',
       playerCards: [],
       dealerCards: [],
       playerScore: 0,
       dealerScore: 0,
-    })),
-}));
+      wins: 0,
+      losses: 0,
+      setGameState: (state) => set({ gameState: state }),
+      setDeckId: (deckId) => set({ deckId }),
+      setPlayerCards: (cards) =>
+        set((state) => ({ playerCards: [...state.playerCards, ...cards] })),
+      addPlayerCard: (card) =>
+        set((state) => {
+          const newPlayerCards = [...state.playerCards, card];
+          const newPlayerScore = calcHandScore(newPlayerCards);
+          if (newPlayerScore === 21) {
+            return {
+              playerCards: newPlayerCards,
+              playerScore: newPlayerScore,
+              gameState: 'finished',
+              wins: state.wins + 1,
+            };
+          }
+          if (newPlayerScore > 21) {
+            return {
+              playerCards: newPlayerCards,
+              playerScore: newPlayerScore,
+              gameState: 'finished',
+              losses: state.losses + 1,
+            };
+          }
+          return {
+            playerCards: newPlayerCards,
+            playerScore: newPlayerScore,
+          };
+        }),
+      setDealerCards: (cards) =>
+        set((state) => ({ dealerCards: [...state.dealerCards, ...cards] })),
+      addDealerCard: (card) =>
+        set((state) => {
+          const newDealerCards = [...state.dealerCards, card];
+          const newDealerScore = calcHandScore(newDealerCards);
+
+          return {
+            dealerCards: newDealerCards,
+            dealerScore: newDealerScore,
+          };
+        }),
+      incrementWins: () => set((state) => ({ wins: state.wins + 1 })),
+      incrementLosses: () => set((state) => ({ losses: state.losses + 1 })),
+      resetGame: () =>
+        set((state) => ({
+          deckId: state.deckId,
+          wins: state.wins,
+          losses: state.losses,
+          gameState: 'waiting',
+          playerCards: [],
+          dealerCards: [],
+          playerScore: 0,
+          dealerScore: 0,
+        })),
+    }),
+    {
+      name: 'blackjack-game-store', // Name that appears in DevTools
+    }
+  )
+);
