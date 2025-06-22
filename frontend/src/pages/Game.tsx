@@ -1,37 +1,16 @@
 // import CardHand from '@/components/CardHand';
 import PlayerControls from '@/components/PlayerControls';
-import { useGameStore } from '@/stores/useGameStore';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
 import ScoreBoard from '@/components/ScoreBoard';
-import { useCreateDeck } from '@/hooks/useGameActions';
+import { useGameStore } from '@/stores/useGameStore';
+import { useNavigate } from 'react-router';
 
 const Game = () => {
   const navigate = useNavigate();
   const { deckId, playerCards, dealerCards } = useGameStore();
-  const { mutate: createDeck } = useCreateDeck();
-
-  useEffect(() => {
-    if (!deckId) {
-      createDeck(undefined, {
-        onError: () => {
-          navigate('/', { replace: true });
-        },
-      });
-    }
-  }, [deckId, navigate, createDeck]);
 
   if (!deckId) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-lg">Creating new deck...</p>
-          <p className="text-sm text-gray-500 mt-2">
-            If this takes too long, you'll be redirected to home.
-          </p>
-        </div>
-      </div>
-    );
+    navigate('/');
+    return null;
   }
 
   return (

@@ -4,18 +4,19 @@ import { useMutation } from '@tanstack/react-query';
 
 export const useCreateDeck = () => {
   const { setDeckId, setGameState } = useGameStore();
-  const drawCardsMutation = useDrawCards();
+  const { mutate: drawCards } = useDrawCards();
+
   return useMutation({
     mutationFn: fetchNewDeck,
     onSuccess: (data) => {
       setDeckId(data.deck_id);
       setGameState('in-progress');
-      drawCardsMutation.mutate({
+      drawCards({
         deckId: data.deck_id,
         count: 2,
         target: 'player',
       });
-      drawCardsMutation.mutate({
+      drawCards({
         deckId: data.deck_id,
         count: 2,
         target: 'dealer',
