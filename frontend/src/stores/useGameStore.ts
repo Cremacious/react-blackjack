@@ -74,7 +74,7 @@ export const useGameStore = create<GameState>()(
         set((state) => {
           const newPlayerCards = [...state.playerCards, card];
           const newPlayerScore = calcHandScore(newPlayerCards);
-          if (newPlayerScore === 21) {
+          if (newPlayerScore === 21 && newPlayerCards.length === 2) {
             return {
               playerCards: newPlayerCards,
               playerScore: newPlayerScore,
@@ -101,7 +101,6 @@ export const useGameStore = create<GameState>()(
         set((state) => {
           const newDealerCards = [...state.dealerCards, card];
           const newDealerScore = calcHandScore(newDealerCards);
-
           return {
             dealerCards: newDealerCards,
             dealerScore: newDealerScore,

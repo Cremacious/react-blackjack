@@ -41,7 +41,6 @@ export const useDrawCards = () => {
       target: 'player' | 'dealer';
     }) => drawCards(deckId, count),
     onSuccess: (data, variables) => {
-      console.log('Cards drawn:', data.cards);
       data.cards.forEach((card: any) => {
         if (variables.target === 'player') {
           addPlayerCard(card);
@@ -59,12 +58,68 @@ export const useDrawCards = () => {
 export const useShuffleDeck = () => {
   return useMutation({
     mutationFn: (deckId: string) => shuffleDeck(deckId),
-    onSuccess: (data) => {
-      console.log('Deck shuffled:', data);
-    },
     onError: (error) => {
       console.error('Error shuffling deck:', error);
     },
   });
 };
 
+// export const useDealerTurn = () => {
+//   const { deckId, dealerScore, incrementWins, incrementLosses, setGameState } =
+//     useGameStore();
+//   const { mutate: drawCard } = useDrawCards();
+//   const playDealerTurn = () => {
+//     if (dealerScore >= 17) {
+//       console.log('Dealer stands at', dealerScore);
+//       endGame();
+//       return;
+//     }
+//     drawCard(
+//       {
+//         deckId,
+//         count: 1,
+//         target: 'dealer',
+//       },
+//       {
+//         onSuccess: () => {
+//           setTimeout(() => {
+//             playDealerTurn();
+//           }, 1000);
+//         },
+//         onError: (error) => {
+//           console.error('Error drawing dealer card:', error);
+//         },
+//       }
+//     );
+//   };
+//   const endGame = () => {
+//     const state = useGameStore.getState();
+//     const finalDealerScore = state.dealerScore;
+//     const finalPlayerScore = state.playerScore;
+
+//     console.log(
+//       'Game ending - Player:',
+//       finalPlayerScore,
+//       'Dealer:',
+//       finalDealerScore
+//     );
+
+//     setGameState('finished');
+
+//     // Determine winner
+//     if (finalDealerScore > 21) {
+//       incrementWins(); // Dealer busted
+//       console.log('Dealer busted!');
+//     } else if (finalPlayerScore > finalDealerScore) {
+//       incrementWins(); // Player wins
+//       console.log('Player wins!');
+//     } else if (finalDealerScore > finalPlayerScore) {
+//       incrementLosses(); // Dealer wins
+//       console.log('Dealer wins!');
+//     } else {
+//       console.log('Tie game!');
+//     }
+//   };
+
+//   return playDealerTurn; // Return the function
+// };
