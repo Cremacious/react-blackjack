@@ -1,12 +1,10 @@
 import HitButton from '@/components/controls/HitButton';
-import RestartButton from '@/components/controls/RestartButton';
 import StayButton from '@/components/controls/StayButton';
 
 const PlayerControls = () => {
   return (
-    <div>
+    <div className="flex flex-row gap-4 justify-center mt-4">
       <HitButton />
-      <RestartButton />
       <StayButton />
     </div>
   );
