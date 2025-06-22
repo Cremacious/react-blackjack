@@ -26,8 +26,6 @@ interface GameState {
   addPlayerCard: (card: Card) => void;
   setDealerCards: (cards: Card[]) => void;
   addDealerCard: (card: Card) => void;
-  setPlayerScore: (score: number) => void;
-  setDealerScore: (score: number) => void;
   incrementWins: () => void;
   incrementLosses: () => void;
   resetGame: () => void;
@@ -72,9 +70,13 @@ export const useGameStore = create<GameState>((set) => ({
   addPlayerCard: (card) =>
     set((state) => {
       const newPlayerCards = [...state.playerCards, card];
+      const newPlayerScore = calcHandScore(newPlayerCards);
+      const newGameState = newPlayerScore > 21 ? 'finished' : state.gameState;
+
       return {
         playerCards: newPlayerCards,
-        playerScore: calcHandScore(newPlayerCards),
+        playerScore: newPlayerScore,
+        gameState: newGameState,
       };
     }),
   setDealerCards: (cards) =>
@@ -82,30 +84,24 @@ export const useGameStore = create<GameState>((set) => ({
   addDealerCard: (card) =>
     set((state) => {
       const newDealerCards = [...state.dealerCards, card];
+      const newDealerScore = calcHandScore(newDealerCards);
+
       return {
         dealerCards: newDealerCards,
-        dealerScore: calcHandScore(newDealerCards),
+        dealerScore: newDealerScore,
       };
-    }),
-  setPlayerScore: () =>
-    set((state) => {
-      const newScore = calcHandScore(state.playerCards);
-      return { playerScore: newScore };
-    }),
-  setDealerScore: () =>
-    set((state) => {
-      const newScore = calcHandScore(state.dealerCards);
-      return { dealerScore: newScore };
     }),
   incrementWins: () => set((state) => ({ wins: state.wins + 1 })),
   incrementLosses: () => set((state) => ({ losses: state.losses + 1 })),
   resetGame: () =>
-    set({
-      deckId: '',
+    set((state) => ({
+      deckId: state.deckId,
+      wins: state.wins,
+      losses: state.losses,
       gameState: 'waiting',
       playerCards: [],
       dealerCards: [],
       playerScore: 0,
       dealerScore: 0,
-    }),
+    })),
 }));

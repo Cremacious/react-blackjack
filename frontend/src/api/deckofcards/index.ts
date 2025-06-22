@@ -26,7 +26,9 @@ export async function shuffleDeck(deckId: string): Promise<Deck> {
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  return response.json();
+  const data = await response.json();
+  console.log(data);
+  return data;
 }
 
 // auth BWti34fjnGWD9CeW3zZuAuVkEZYMMlx

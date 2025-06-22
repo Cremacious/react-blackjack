@@ -1,4 +1,4 @@
-import { drawCards, fetchNewDeck } from '@/api/deckofcards';
+import { drawCards, fetchNewDeck, shuffleDeck } from '@/api/deckofcards';
 import { useGameStore } from '@/stores/useGameStore';
 import { useMutation } from '@tanstack/react-query';
 
@@ -49,10 +49,22 @@ export const useDrawCards = () => {
           addDealerCard(card);
         }
       });
-
     },
     onError: (error) => {
       console.error('Error drawing cards:', error);
     },
   });
 };
+
+export const useShuffleDeck = () => {
+  return useMutation({
+    mutationFn: (deckId: string) => shuffleDeck(deckId),
+    onSuccess: (data) => {
+      console.log('Deck shuffled:', data);
+    },
+    onError: (error) => {
+      console.error('Error shuffling deck:', error);
+    },
+  });
+};
+

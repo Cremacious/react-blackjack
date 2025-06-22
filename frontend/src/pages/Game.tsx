@@ -1,9 +1,23 @@
 import CardHand from '@/components/CardHand';
 import PlayerControls from '@/components/PlayerControls';
 import { useGameStore } from '@/stores/useGameStore';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 const Game = () => {
-  const { playerScore, deckId, playerCards, dealerScore, dealerCards } = useGameStore();
+  const navigate = useNavigate();
+  const { playerScore, deckId, playerCards, dealerScore, dealerCards } =
+    useGameStore();
+
+  useEffect(() => {
+    if (!deckId) {
+      navigate('/', { replace: true });
+    }
+  }, [deckId, navigate]);
+
+  if (!deckId) {
+    return <div>Redirecting to home...</div>;
+  }
 
   return (
     <div>
@@ -27,6 +41,15 @@ const Game = () => {
       Game
       <p className="bg-green-500 text-black">DealerScore:{dealerScore}</p>
       <p className="bg-green-500 text-black">PlayerScore:{playerScore}</p>
+      {playerScore > 21 && (
+        <p className="text-red-500">You busted! Game over.</p>
+      )}
+      {dealerScore > 21 && (
+        <p className="text-green-500">Dealer busted! You win!</p>
+      )}
+      {playerScore === 21 && (
+        <p className="text-green-500">Blackjack! You win!</p>
+      )}
       <p className="bg-blue-500 text-black">Deckid: {deckId}</p>
       <CardHand />
       <PlayerControls />
