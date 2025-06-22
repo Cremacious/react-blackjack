@@ -49,6 +49,7 @@ export const useDrawCards = () => {
           addDealerCard(card);
         }
       });
+
     },
     onError: (error) => {
       console.error('Error drawing cards:', error);

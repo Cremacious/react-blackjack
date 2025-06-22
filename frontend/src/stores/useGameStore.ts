@@ -33,6 +33,29 @@ interface GameState {
   resetGame: () => void;
 }
 
+const calcHandScore = (cards: Card[]): number => {
+  let score = 0;
+  let aces = 0;
+
+  cards.forEach((card) => {
+    if (['KING', 'QUEEN', 'JACK'].includes(card.value)) {
+      score += 10;
+    } else if (card.value === 'ACE') {
+      score += 11;
+      aces += 1;
+    } else {
+      score += parseInt(card.value, 10);
+    }
+  });
+
+  while (score > 21 && aces > 0) {
+    score -= 10;
+    aces -= 1;
+  }
+
+  return score;
+};
+
 export const useGameStore = create<GameState>((set) => ({
   deckId: '',
   gameState: 'waiting',
@@ -47,13 +70,33 @@ export const useGameStore = create<GameState>((set) => ({
   setPlayerCards: (cards) =>
     set((state) => ({ playerCards: [...state.playerCards, ...cards] })),
   addPlayerCard: (card) =>
-    set((state) => ({ playerCards: [...state.playerCards, card] })),
+    set((state) => {
+      const newPlayerCards = [...state.playerCards, card];
+      return {
+        playerCards: newPlayerCards,
+        playerScore: calcHandScore(newPlayerCards),
+      };
+    }),
   setDealerCards: (cards) =>
     set((state) => ({ dealerCards: [...state.dealerCards, ...cards] })),
   addDealerCard: (card) =>
-    set((state) => ({ dealerCards: [...state.dealerCards, card] })),
-  setPlayerScore: (score) => set({ playerScore: score }),
-  setDealerScore: (score) => set({ dealerScore: score }),
+    set((state) => {
+      const newDealerCards = [...state.dealerCards, card];
+      return {
+        dealerCards: newDealerCards,
+        dealerScore: calcHandScore(newDealerCards),
+      };
+    }),
+  setPlayerScore: () =>
+    set((state) => {
+      const newScore = calcHandScore(state.playerCards);
+      return { playerScore: newScore };
+    }),
+  setDealerScore: () =>
+    set((state) => {
+      const newScore = calcHandScore(state.dealerCards);
+      return { dealerScore: newScore };
+    }),
   incrementWins: () => set((state) => ({ wins: state.wins + 1 })),
   incrementLosses: () => set((state) => ({ losses: state.losses + 1 })),
   resetGame: () =>
