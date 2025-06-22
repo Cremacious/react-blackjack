@@ -1,14 +1,11 @@
-import { useCreateDeck } from '@/hooks/useGameActions';
-import { useGameStore } from '@/stores/useGameStore';
+import { useNavigate } from 'react-router';
 import { Button } from './ui/button';
 
 const NewGameButton = () => {
-  const { resetGame } = useGameStore();
-  const { mutate: createNewDeck } = useCreateDeck();
+  const navigate = useNavigate();
 
   const handleNewGame = () => {
-    resetGame();
-    createNewDeck();
+    navigate('/game');
   };
 
   return (
@@ -19,9 +16,6 @@ const NewGameButton = () => {
       >
         New Game
       </Button>
-      <p className="text-sm text-gray-500 mt-2">
-        Click to start a new game with a fresh deck.
-      </p>
     </div>
   );
 };

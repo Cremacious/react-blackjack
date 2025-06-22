@@ -4,19 +4,34 @@ import { useGameStore } from '@/stores/useGameStore';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import ScoreBoard from '@/components/ScoreBoard';
+import { useCreateDeck } from '@/hooks/useGameActions';
 
 const Game = () => {
   const navigate = useNavigate();
   const { deckId, playerCards, dealerCards } = useGameStore();
+  const { mutate: createDeck } = useCreateDeck();
 
   useEffect(() => {
     if (!deckId) {
-      navigate('/', { replace: true });
+      createDeck(undefined, {
+        onError: () => {
+          navigate('/', { replace: true });
+        },
+      });
     }
-  }, [deckId, navigate]);
+  }, [deckId, navigate, createDeck]);
 
   if (!deckId) {
-    return <div>Redirecting to home...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-lg">Creating new deck...</p>
+          <p className="text-sm text-gray-500 mt-2">
+            If this takes too long, you'll be redirected to home.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
